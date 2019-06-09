@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+    mongo:
+        image: mongo
+        restart: always
+        ports:
+            - "27017:27017"
+        volumes:
+            - ./docker/mongo/data:/data/db
+    mongo-express:
+        image: mongo-express
+        restart: always
+        ports:
+            - "8017:8081"
+        environment:
+            - ME_CONFIG_MONGODB_SERVER=mongo
+        depends_on:
+            - mongo
+        links:
+            - mongo:mongo
+    api:
+        build:
+            context: ./docker/api
+        command: sh -c "yarn && DEBUG=api* yarn start-dev"
+        ports:
+            - 3000:3000
+            - 4000:4000
+            - 9009:9009
+        environment:
+            - NODE_ENV=development
+            - MONGO_URI=${MONGO_URI}
+        volumes:
+            - ./:/usr/src/app
+            - ~/Library/Caches/Yarn/v4:/home/node/.cache/yarn/v4
+        depends_on:
+            - mongo
+        links:
+            - mongo:mongo
