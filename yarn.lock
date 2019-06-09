@@ -5738,13 +5738,6 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-uuid-mongodb@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/uuid-mongodb/-/uuid-mongodb-2.0.1.tgz#4b4630c4c0be840e533898ab55ca68fa72f5d882"
-  integrity sha512-BXoX03k520m4/GLbIznfl4jxBXU5dCd5CllL+qcfdt5dBPfMYVYxxsFYjswzwLycsyHFATgXr0wrMNE0AvGGFg==
-  dependencies:
-    uuid "^3.3.2"
-
 uuid@^3.1.0, uuid@^3.2.1, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
