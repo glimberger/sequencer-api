@@ -20,8 +20,9 @@ services:
         links:
             - mongo:mongo
     api:
-        build:
-            context: ./docker/api
+        image: node:lts
+        user: "node"
+        working_dir: /home/node/app
         command: sh -c "yarn && DEBUG=api* yarn start-dev"
         ports:
             - 3000:3000
@@ -32,8 +33,7 @@ services:
             - MONGO_URI=${MONGO_URI}
             - MONGO_URI_TEST=${MONGO_URI_TEST}
         volumes:
-            - ./:/usr/src/app
-            - ~/Library/Caches/Yarn/v4:/home/node/.cache/yarn/v4
+            - ./:/home/node/app
         depends_on:
             - mongo
         links:
