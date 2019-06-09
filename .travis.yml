@@ -10,3 +10,5 @@ services:
 before_script:
     - mongo --eval 'db.hostInfo()'
 script: yarn test
+notifications:
+    slack: hirsute:3M3jmE7DfB3N5qGuvzJ0SRI8
