@@ -13,7 +13,8 @@ before_install:
     - chmod +x docker-compose
     - sudo mv docker-compose /usr/local/bin
     - docker-compose --version
-    - docker-compose up --build
+    - docker-compose up --build -d
+    - sleep 15
     - docker ps
 
 script: docker-compose run api yarn test
