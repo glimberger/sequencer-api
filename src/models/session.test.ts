@@ -3,7 +3,7 @@ import Session from "./session"
 
 describe("Session model", () => {
   beforeAll(async () => {
-    await mongoose.connect("mongodb://localhost/sequencer_test", {
+    await mongoose.connect(process.env.MONGO_URI_TEST, {
       useNewUrlParser: true,
       useFindAndModify: false,
       useCreateIndex: true

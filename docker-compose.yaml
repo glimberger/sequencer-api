@@ -30,6 +30,7 @@ services:
         environment:
             - NODE_ENV=development
             - MONGO_URI=${MONGO_URI}
+            - MONGO_URI_TEST=${MONGO_URI_TEST}
         volumes:
             - ./:/usr/src/app
             - ~/Library/Caches/Yarn/v4:/home/node/.cache/yarn/v4
