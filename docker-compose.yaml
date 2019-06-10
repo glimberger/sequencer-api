@@ -23,7 +23,7 @@ services:
         image: node:lts
         user: "node"
         working_dir: /home/node/app
-        command: sh -c "yarn && DEBUG=api* yarn start-dev"
+        command: sh -c "yarn && yarn start-dev"
         ports:
             - 3000:3000
             - 4000:4000
