@@ -1,23 +1,25 @@
+import { Model } from "mongoose"
 import { IResolvers } from "graphql-tools"
-import { Context } from "apollo-server-core"
 import { GraphQLResolveInfo } from "graphql"
 import uuid from "uuid"
-import Sample from "../models/sample"
+import Sample, { ISample } from "../models/sample"
 import Instrument, {
+  IInstrument,
   IInstrumentCreateInput,
   IInstrumentMapping,
   IInstrumentMutationResponse
 } from "../models/instrument"
 
-const processInstrumentList = async (
+export const processInstrumentList = async (
+  model: Model<IInstrument>,
   parent: any,
-  args: any,
-  context: Context
+  args: any
 ) => {
-  return Instrument.find({})
+  return model.find({})
 }
 
-const processCreateInstrument = async (
+export const processCreateInstrument = async (
+  models: { instrument: Model<IInstrument>; sample: Model<ISample> },
   parent: any,
   args: { input: IInstrumentCreateInput }
 ): Promise<IInstrumentMutationResponse> => {
@@ -31,7 +33,9 @@ const processCreateInstrument = async (
 
     // fetch sample documents - should contain null values
     const sampleDocuments = await Promise.all(
-      [...sampleIDSet].map(async sampleID => Sample.findOne({ id: sampleID }))
+      [...sampleIDSet].map(async sampleID =>
+        models.sample.findOne({ id: sampleID })
+      )
     )
 
     const sampleDocument = (sampleID: string) =>
@@ -50,9 +54,8 @@ const processCreateInstrument = async (
         }
       )
       .filter(m => !!m)
-    console.log("mapping", instrumentMapping)
 
-    const instrumentDocument = await Instrument.create({
+    const instrumentDocument = await models.instrument.create({
       id,
       label,
       group,
@@ -71,7 +74,9 @@ const processCreateInstrument = async (
       }
     }
 
-    const returnDocument = await Instrument.findById(instrumentDocument._id)
+    const returnDocument = await models.instrument.findById(
+      instrumentDocument._id
+    )
 
     if (!returnDocument) {
       return {
@@ -96,22 +101,16 @@ const processCreateInstrument = async (
 
 const resolvers: IResolvers = {
   Query: {
-    instrumentList: (
-      parent: any,
-      args: any,
-      context: Context,
-      info?: GraphQLResolveInfo
-    ) => {
-      return processInstrumentList(parent, args, context)
-    }
+    instrumentList: (parent: any, args: any, info?: GraphQLResolveInfo) =>
+      processInstrumentList(Instrument, parent, args)
   },
   Mutation: {
-    createInstrument: (
-      parent: any,
-      args: any,
-      context: Context,
-      info?: GraphQLResolveInfo
-    ) => processCreateInstrument(parent, args)
+    createInstrument: (parent: any, args: any, info?: GraphQLResolveInfo) =>
+      processCreateInstrument(
+        { instrument: Instrument, sample: Sample },
+        parent,
+        args
+      )
   }
 }
 
