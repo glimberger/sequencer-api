@@ -1,14 +1,27 @@
 language: node_js
 node_js:
-    - "lts/*"
+  - "lts/*"
 cache:
-    yarn: true
-    directories:
-        - "node_modules"
+  yarn: true
+  directories:
+    - "node_modules"
 services:
-    - mongodb
+  - mongodb
 before_script:
-    - mongo --eval 'db.hostInfo()'
+  - mongo --eval 'db.hostInfo()'
 script: yarn test
+before_deploy: npm install now --no-save # Install Now CLI on Travis
+deploy:
+  - provider: script # Run a custom deployment script which we will define below
+    script: now --token $NOW_TOKEN --public
+    skip_cleanup: true
+    on:
+      all_branches: true
+      master: false
+  - provider: script
+    script: now --token $NOW_TOKEN && now alias --token $NOW_TOKEN
+    skip_cleanup: true
+    on:
+      master: true
 notifications:
-    slack: hirsute:3M3jmE7DfB3N5qGuvzJ0SRI8
+  slack: hirsute:3M3jmE7DfB3N5qGuvzJ0SRI8
